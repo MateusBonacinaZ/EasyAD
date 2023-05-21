@@ -54,7 +54,7 @@ def convert_ads_get(ads) -> dict:
         'telefone_anunciante': ads['usuario_interno']['telefone_anunciante']     
     }
 
-# ->  ENDPOINTS DE ANUNCIOS  <-
+# ->  CRUD DOS ENDPOINTS DE ANUNCIOS  <-
 
 # ROUTE - INSERT ADS
 @app.post("/anuncios")
@@ -90,16 +90,31 @@ async def get_ads_quantity(quantity: int) -> list:
     return ads
 
 
-# ROUTE - GET ADS BY ID
+# ROUTE - GET ADS BY CATEGORY
 @app.get("/anuncios/{category}")
 async def get_ads_category_route(category: str):
     ads = await get_ads_category(category)
     return ads
 
 
-# METHOD - GET ADS ID
+# METHOD - GET ADS CATEGORY
 async def get_ads_category(category: str) -> list:
     ads = []
     async for register in collection_easyad.find({'categoria_anuncio': {'categoria': category}}):
         ads.append(convert_ads_get(register))
     return ads
+
+# ROUTE - PUT ADS ID
+@app.put('/anuncios/{id}')
+async def update_ads_id_route(id: str, ads: Anuncio = Body(...)):
+    ads_update = jsonable_encoder(ads)
+    ads_changed = await update_ads_id(id, ads_update)
+    return ads_changed
+
+# METHOD - PUT ADS ID
+async def update_ads_id(id: str, data_ads: dict) -> dict:
+    result = await collection_easyad.replace_one({'_id': ObjectId(id)}, data_ads, upsert=False)
+    if result.raw_result['nModified'] == 1:
+        return convert_ads_get(await collection_easyad.find_one({'_id': ObjectId(id)}))
+    else:
+        return False
