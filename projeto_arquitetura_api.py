@@ -92,13 +92,13 @@ async def get_ads_quantity(quantity: int) -> list:
 
 # ROUTE - GET ADS BY ID
 @app.get("/anuncios/{category}")
-async def get_ads_id_route(category: str):
-    ads = await get_ads_id(category)
+async def get_ads_category_route(category: str):
+    ads = await get_ads_category(category)
     return ads
 
 
 # METHOD - GET ADS ID
-async def get_ads_id(category: str) -> list:
+async def get_ads_category(category: str) -> list:
     ads = []
     async for register in collection_easyad.find({'categoria_anuncio': {'categoria': category}}):
         ads.append(convert_ads_get(register))
