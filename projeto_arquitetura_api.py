@@ -2,7 +2,7 @@
 from fastapi import FastAPI, Body
 from fastapi.encoders import *
 from pydantic import BaseModel, Field
-from bson import ObjectId
+from bson.objectid import ObjectId
 import motor.motor_asyncio
 
 # INCIALIZANDO APLICATIVO E REALIZANDO COM O BANCO DE DADOS
@@ -116,5 +116,20 @@ async def update_ads_id(id: str, data_ads: dict) -> dict:
     result = await collection_easyad.replace_one({'_id': ObjectId(id)}, data_ads, upsert=False)
     if result.raw_result['nModified'] == 1:
         return convert_ads_get(await collection_easyad.find_one({'_id': ObjectId(id)}))
+    else:
+        return False
+
+# ROUTE - DELETE ADS ID
+@app.delete('/anuncios/{id_delete}')
+async def delete_ads_id_route(id_delete: str):
+    ads_deleted = await delete_ads_id(id_delete)
+    return ads_deleted
+
+
+# METHOD - DELETE ADS IF
+async def delete_ads_id(id_delete: str):
+    result = await collection_easyad.find_one_and_delete({"_id" : ObjectId(id_delete)})
+    if result != None:
+        return convert_ads_get(result)
     else:
         return False
