@@ -1,5 +1,5 @@
 # IMPORTANDO AS BIBLIOTECAS
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, Response
 from fastapi.encoders import *
 from pydantic import BaseModel, Field
 from bson.objectid import ObjectId
@@ -57,7 +57,7 @@ def convert_ads_get(ads) -> dict:
 # ->  CRUD DOS ENDPOINTS DE ANUNCIOS  <-
 
 # ROUTE - INSERT ADS
-@app.post("/anuncios")
+@app.post("/anuncios", status_code=201)
 async def insert_ads_route(ads: Anuncio = Body(...)):
     ads_insert = jsonable_encoder(ads)
     new_ads = await insert_ads(ads_insert)
@@ -72,7 +72,7 @@ async def insert_ads(data_ads: dict) -> dict:
 
 
 # ROUTE - GET ADS QUANTITY
-@app.get("/anuncios")
+@app.get("/anuncios", status_code=200)
 async def get_ads_quantity_route(quantity: dict = Body(...)):
     ads = await get_ads_quantity(quantity['quantity'])
     return ads
@@ -91,7 +91,7 @@ async def get_ads_quantity(quantity: int) -> list:
 
 
 # ROUTE - GET ADS BY CATEGORY
-@app.get("/anuncios/{category}")
+@app.get("/anuncios/{category}", status_code=200)
 async def get_ads_category_route(category: str):
     ads = await get_ads_category(category)
     return ads
@@ -105,11 +105,14 @@ async def get_ads_category(category: str) -> list:
     return ads
 
 # ROUTE - PUT ADS ID
-@app.put('/anuncios/{id_put}')
-async def update_ads_id_route(id_put: str, ads: Anuncio = Body(...)):
+@app.put('/anuncios/{id_put}', status_code=200)
+async def update_ads_id_route(id_put: str,  response: Response, ads: Anuncio = Body(...)):
     ads_update = jsonable_encoder(ads)
     ads_changed = await update_ads_id(id_put, ads_update)
-    return ads_changed
+    if ads_changed != False:
+        return ads_changed
+    else:
+        response.status_code=404
 
 # METHOD - PUT ADS ID
 async def update_ads_id(id_put: str, data_ads: dict) -> dict:
@@ -120,11 +123,13 @@ async def update_ads_id(id_put: str, data_ads: dict) -> dict:
         return False
 
 # ROUTE - DELETE ADS ID
-@app.delete('/anuncios/{id_delete}')
-async def delete_ads_id_route(id_delete: str):
+@app.delete('/anuncios/{id_delete}', status_code=200)
+async def delete_ads_id_route(id_delete: str, response: Response):
     ads_deleted = await delete_ads_id(id_delete)
-    return ads_deleted
-
+    if ads_deleted != False:
+        return ads_deleted
+    else:
+        response.status_code=404
 
 # METHOD - DELETE ADS IF
 async def delete_ads_id(id_delete: str):
