@@ -105,17 +105,17 @@ async def get_ads_category(category: str) -> list:
     return ads
 
 # ROUTE - PUT ADS ID
-@app.put('/anuncios/{id}')
-async def update_ads_id_route(id: str, ads: Anuncio = Body(...)):
+@app.put('/anuncios/{id_put}')
+async def update_ads_id_route(id_put: str, ads: Anuncio = Body(...)):
     ads_update = jsonable_encoder(ads)
-    ads_changed = await update_ads_id(id, ads_update)
+    ads_changed = await update_ads_id(id_put, ads_update)
     return ads_changed
 
 # METHOD - PUT ADS ID
-async def update_ads_id(id: str, data_ads: dict) -> dict:
-    result = await collection_easyad.replace_one({'_id': ObjectId(id)}, data_ads, upsert=False)
+async def update_ads_id(id_put: str, data_ads: dict) -> dict:
+    result = await collection_easyad.replace_one({'_id': ObjectId(id_put)}, data_ads, upsert=False)
     if result.raw_result['nModified'] == 1:
-        return convert_ads_get(await collection_easyad.find_one({'_id': ObjectId(id)}))
+        return convert_ads_get(await collection_easyad.find_one({'_id': ObjectId(id_put)}))
     else:
         return False
 
