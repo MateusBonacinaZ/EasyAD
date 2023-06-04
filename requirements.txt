@@ -1,0 +1,3 @@
+fastapi[all]
+bson
+motor
