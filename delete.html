@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excluir Anúncio</title>
+    <link rel="stylesheet" href="./css/delete.css">
+</head>
+<body style="background-color: #F3F2EF;">
+    <div class="content-delete">
+        <h1 style="width: 450px; text-align: center; margin-bottom: 50px; color: #13b5dd;">Tem certeza que deseja excluir o anúncio?</h3>
+        <input class="input-form1" type="text" placeholder="Digite o id aqui", id="form-delete">
+        <button style="font-size: 16px;" class="delete-ad" type="submit" onclick="delete_ads()">Excluir</button>
+        <a href="./index.html">
+        <button style="font-size: 16px; background-color: white; color: grey; border: 2px solid #BEBBBB; cursor: pointer;">Cancelar</button>
+        </a> 
+    </div>
+
+    <script>
+        function delete_ads(){
+            const object_id = document.getElementById("form-delete").value
+            
+            const options = {
+                method: 'DELETE'
+            };
+
+            fetch('http://127.0.0.1:8000/anuncios/'+object_id, options)
+            .then(function(response) {
+                if (response.status == 200) {
+                    window.location.assign("./index.html")
+                    alert("Anuncio excluído")
+                }
+                else {
+                    alert("Anúncio não excluído")
+                }
+            })
+            
+        }
+    </script>
+
+</body>
+</html>

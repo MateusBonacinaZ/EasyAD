@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/register.css">
+</head>
+<body>
+
+    <div class="container-main">
+        <div class="image">
+            <img width="1000px" src="./assets/Add to Cart-bro.svg" alt="">
+        </div>
+    
+        <div class="container-form">
+    
+            <h1 class="title-register">EasyAD</h1>
+
+            <form id="form-etapa1">
+
+                        <input type="text" class="input-form1" id="tituloProduto" placeholder="Nome do produto" name="tituloProduto" required>
+                            
+                        <input type="text" class="input-form1" id="localidadeProduto" placeholder="Local do produto" name="localidade" required>
+                                    
+                        <input type="number" class="input-form1" id="valorProduto" placeholder="Valor do produto" name="localidade" required>
+        
+                        <label class="picture" for="picture__input" tabIndex="0">
+                            <span class="picture__image"></span>
+                            </label>
+                            
+                        <input type="file" name="picture__input" id="picture__input">
+    
+                        <select name="cars" placeholder="Categórias" id="selectProduto" class="input-form1 select-form" style="background-color: white;" id="cars" required>
+                        <option value="" disabled selected>Categórias</option>
+                        <option value="Motos">Motos</option>
+                        <option value="Carros">Carros</option>
+                        <option value="Livros">Livros</option>
+                        <option value="Outros">Outros</option>
+                        </select>
+                    
+                        <textarea placeholder="Descrição" name="" id="descricaoProduto" cols="20" rows="1" required></textarea>                
+
+                        <input type="text" placeholder="Nome" class="input-form1"  id="nomeAnunciante" name="idade" required>
+        
+                        <input type="text" placeholder="E-mail" class="input-form1" id="emailAnunciante" name="cidade" required>
+        
+                        <input type="text" placeholder="Telefone" class="input-form1 phone-input" id="telefoneAnunciante" name="telefone" required>
+                        
+                        <input type="password"  class="input-form1" placeholder="Senha" id="senhaAnunciante" required>
+
+                        <div class="align-btn">
+                            <a href="./index.html" class="cancel-btn">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="register-ad">
+                                Cadastrar
+                            </button> 
+                        </div>        
+                </div>
+            </form>
+        </div>
+    </div>
+
+        <script>
+                
+                const input = document.getElementById("picture__input")
+                input.addEventListener("change", (event) => {
+                    const file = event.target.files[0];
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        const base64String = reader.result;
+                        imageConverted = base64String;
+                    };
+                    reader.readAsDataURL(file);
+                    });
+
+
+                const form = document.getElementById("form-etapa1");
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    let titulo_produto = document.getElementById('tituloProduto').value;
+                    let localidade_produto = document.getElementById('localidadeProduto').value;
+                    let valor_produto = document.getElementById('valorProduto').value;
+                    let imagem_produto = imageConverted;
+                    let categoria_anuncio = document.getElementById('selectProduto').value;
+                    let descricao_produto = document.getElementById('descricaoProduto').value;
+                    
+
+                    let nome_anunciante = document.getElementById('nomeAnunciante').value;
+                    let email_anunciante = document.getElementById('emailAnunciante').value;
+                    let telefone_anunciante = document.getElementById('telefoneAnunciante').value;
+                    let senha_anunciante = document.getElementById('senhaAnunciante').value;
+                    
+
+                    let dados = {
+                            titulo_produto: titulo_produto,
+                            descricao_produto: descricao_produto,
+                            localidade_produto: localidade_produto,
+                            valor_produto: valor_produto,
+                            imagem_produto: imagem_produto,
+                            categoria_anuncio: {
+                                categoria: categoria_anuncio
+                            },
+                            usuario_interno: {
+                                nome_anunciante: nome_anunciante,
+                                email_anunciante: email_anunciante,
+                                telefone_anunciante: telefone_anunciante,
+                                senha_anunciante: senha_anunciante
+                            }
+                        };                    
+
+                        console.log(dados);
+                        
+                        const options = {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(dados),
+                        };
+
+                        fetch('http://127.0.0.1:8000/anuncios', options)
+                        .then(function(response) {
+                        if (response.status == 201) {
+                            window.location.assign("./index.html")
+                            alert("Anuncio inserido")
+                        }
+                        else {
+                            alert("Anúncio não inserido")
+                        }
+                        })
+                })
+
+                const inputFile = document.querySelector("#picture__input");
+                const pictureImage = document.querySelector(".picture__image");
+                const pictureImageTxt = "Enviar imagem";
+                pictureImage.innerHTML = pictureImageTxt;
+
+                inputFile.addEventListener("change", function (e) {
+                const inputTarget = e.target;
+                const file = inputTarget.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+
+                    reader.addEventListener("load", function (e) {
+                    const readerTarget = e.target;
+
+                    const img = document.createElement("img");
+                    img.src = readerTarget.result;
+                    img.classList.add("picture__img");
+
+                    pictureImage.innerHTML = "";
+                    pictureImage.appendChild(img);
+                    });
+
+                    reader.readAsDataURL(file);
+                } else {
+                    pictureImage.innerHTML = pictureImageTxt;
+                }
+                });
+
+                
+        </script>
+</body>
+</html>

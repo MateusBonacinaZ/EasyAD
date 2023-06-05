@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyAD</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <header>
+        <h2>EasyAD - Carros</h2>
+        <div class="align-a-header">
+            <a href="./register.html"><button>Cadastrar Anúncio</button></a>
+            <a href="./update.html"><button>Editar Anúncio</button></a>
+            <a href="./delete.html"> <button style="background-color: red;">Excluir Anúncio</button> </a>
+        </div>
+    </header>
+
+
+    <div class="divider" style="display:flex; width: 100vw; height: 100vh;">
+
+        <div class="content-menu">
+            <div class="container-menu">
+                <nav>
+                    <input id="toggle" type="checkbox" checked>
+                    <h2>Categorias</h2>
+                <ul>
+                    <li><a href="./index.html" style="text-transform:capitalize">Carros</a></li>
+                    <li><a href="./index1.html" style="text-transform:capitalize">Motos</a></li>
+                    <li><a href="./index2.html" style="text-transform:capitalize">Livros</a></li>
+                    <li><a href="./index3.html" style="text-transform:capitalize">Outros</a></li>
+                    <img src="./assets/Dropdown menu-pana.svg">
+                </ul>
+                </nav>
+            </div>
+        </div>
+
+
+        <div id="box-container" class="box-container">
+            
+            <script>
+
+                const container = document.getElementById("box-container");
+                let req = new XMLHttpRequest()
+                let api = "http://127.0.0.1:8000/anuncios/Carros"
+                req.open("GET", api)
+                req.send()
+                req.onload = () => {
+                    if (req.status == 200) {
+                        dados  = JSON.parse(req.response)
+                        for (let i = 0; i < dados.length; i++) {
+                            
+                          let anuncio = dados[i];
+                          let card = document.createElement("div");
+                          card.classList.add("box-card");
+                          
+
+                          let imagemProduto = document.createElement("img");
+                          imagemProduto.classList.add("box-image");
+                          imagemProduto.src = anuncio.imagem_produto;
+
+                          let tituloProduto = document.createElement("h3");
+                          tituloProduto.classList.add("box-title");
+                          tituloProduto.textContent = anuncio.titulo_produto;
+  
+
+                          let descricaoProduto = document.createElement("p");
+                          descricaoProduto.classList.add("box-infos");
+                          descricaoProduto.textContent = "Descrição: " + anuncio.descricao_produto;
+
+                          let localidadeProduto = document.createElement("p");
+                          localidadeProduto.classList.add("box-infos");
+                          localidadeProduto.textContent = "Localidade: "+ anuncio.localidade_produto;
+
+                          let valorProduto = document.createElement("p");
+                          valorProduto.classList.add("box-infos");
+                          valorProduto.textContent = "Valor: " + anuncio.valor_produto;
+
+
+                          let categoriaAnuncio = document.createElement("p");
+                          categoriaAnuncio.classList.add("box-infos");
+                          categoriaAnuncio.textContent = "Categoria: " + anuncio.categoria_anuncio;
+
+                          let nomeAnunciante = document.createElement("p");
+                          nomeAnunciante.classList.add("box-infos");
+                          nomeAnunciante.textContent = "Anunciante: " + anuncio.nome_anunciante;
+
+                          let emailAnunciante = document.createElement("p");
+                          emailAnunciante.classList.add("box-infos");
+                          emailAnunciante.textContent = "Email: " + anuncio.email_anunciante;
+
+                          let telefoneAnunciante = document.createElement("p");
+                          telefoneAnunciante.classList.add("box-infos");
+                          telefoneAnunciante.textContent = "Telefone: " + anuncio.telefone_anunciante;
+                        
+                          let idProduto = document.createElement("p");
+                          idProduto.classList.add("id-box");
+                          idProduto.textContent = "Id: " + anuncio.id;
+
+                            
+                          card.appendChild(imagemProduto);
+                          card.appendChild(tituloProduto);
+                          card.appendChild(descricaoProduto);
+                          card.appendChild(localidadeProduto);
+                          card.appendChild(valorProduto);
+                          card.appendChild(categoriaAnuncio);
+                          card.appendChild(nomeAnunciante);
+                          card.appendChild(emailAnunciante);
+                          card.appendChild(telefoneAnunciante);
+                          card.appendChild(idProduto);
+                          
+                            
+
+                          container.appendChild(card);
+                      }
+                    }
+                }
+            </script>
+                  
+        </div>
+    </div>
+</body>
+</html>
